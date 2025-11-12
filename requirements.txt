@@ -1,0 +1,7 @@
+pandas
+numpy
+matplotlib
+statsmodels
+yahoo_fin
+requests_html
+yfinance
