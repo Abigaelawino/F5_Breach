@@ -1,2 +1,132 @@
-# F5_Breach
-Causal analysis of F5’s 2024 security breach using a Difference-in-Differences model. This project estimates the breach’s impact on daily stock returns using real market data and competitor controls. Includes modular Python functions for downloading prices, computing returns, and running DiD.
+# Causal Impact of the 2025 F5 Networks Cybersecurity Breach  
+### Difference-in-Differences Analysis of Stock Market Reaction
+
+This project analyzes the financial impact of the **October 2025 cyber breach at F5 Networks (FFIV)** using **causal inference techniques** — specifically a **Difference-in-Differences (DiD)** model and a **Difference-in-Trends** robustness test.
+
+Because real stock markets cannot be A/B tested, DiD provides a credible way to estimate what portion of the price impact was caused by the breach itself.
+
+---
+
+## Project Goal
+Estimate how the public breach announcement affected **F5 Networks’ daily stock returns**, compared to:
+
+- Industry competitors  
+- Broader market benchmarks  
+
+The focus is on identifying **causal impact**, not just correlation.
+
+---
+
+## Data Sources
+
+All stock data comes from **Yahoo Finance** pulled using the `yfinance` API.
+
+**Time Window**
+- Start: **2025-04-18**  
+- End: **2025-12-12**  
+- Event Date: **2025-10-16**
+
+**Tickers Used**
+
+| Group | Ticker | Description |
+|-------|--------|-------------|
+| Treated | **FFIV** | F5 Networks |
+| Competition | AKAM | Akamai |
+|            | NET | Cloudflare |
+|            | CSCO | Cisco |
+| Benchmarks | SPY | S&P 500 ETF |
+|            | VTI | Total Market ETF |
+
+---
+
+## Methodology
+
+### 1. Compute Daily Returns  
+
+returns ~ treated + post + treated_post
+Where:
+
+- **treated = 1** for FFIV  
+- **post = 1** on/after event date  
+- **treated_post = treated × post**  
+- The coefficient on `treated_post` is the **causal effect**  
+
+### 3. Validity Checks  
+To ensure a credible estimate:
+
+- ✔ **Parallel Trends Check**
+- ✔ **Placebo Test (fake event date)**
+- ✔ **Difference-in-Trends robustness model**
+
+---
+
+## Key Findings
+
+### Main Result  
+The DiD estimate shows a **~9.5% additional drop** in F5’s daily returns after the breach:
+treated_post = -0.0951 (p < 0.001)
+
+This means:
+
+F5 underperformed competitors by **about 9–10% due to the breach**, beyond normal market movement.
+
+### Additional observations
+- `treated` not significant → FFIV behaved similarly to peers before the event  
+- `post` slightly negative → market dipped modestly overall  
+- Placebo effect = no significance → supports causal validity  
+
+---
+
+## Visualizations Included
+
+- Daily returns for all tickers  
+- Event impact line  
+- Pre-event trends for assumption checking  
+- Placebo effect graph  
+- Robustness trend model  
+
+---
+
+## Code Structure
+
+### Data Collection  
+- `get_daily_prices()`  
+- `get_prices()`  
+
+### Models  
+- `run_diff_in_diff()`  
+- `difference_in_trends()`  
+- Placebo test  
+
+### Plotting  
+- Event impact visualizations  
+- Trend diagnostics  
+
+Packages used:
+- pandas  
+- numpy  
+- matplotlib  
+- statsmodels  
+- yfinance  
+
+---
+
+## Why This Matters
+
+Cybersecurity failures have **material financial impact**.  
+This project demonstrates how data science + causal inference can support:
+
+- Risk management  
+- Cyber impact assessment  
+- Investor relations  
+- Executive reporting  
+- Strategic decision-making  
+
+---
+
+## Future Extensions
+
+- Add volatility + volume impact  
+- Use intraday prices for precision  
+- Consider a Bayesian structural time-series model  
+- Expand competitor set using clustering  
